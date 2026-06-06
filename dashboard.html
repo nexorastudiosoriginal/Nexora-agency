@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>NEXORA AGENCY - Member Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        background: '#000000',
+                        foreground: '#ffffff',
+                        border: '#1a1a1a',
+                        muted: '#a3a3a3'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .logo-anim { animation: logoPulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes logoPulse {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
+            30% { transform: scale(1.05) translateY(0); opacity: 1; filter: blur(0); }
+            80% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; filter: blur(20px); visibility: hidden; }
+        }
+        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; backdrop-filter: blur(16px); }
+        .modal-content-active { transform: scale(1) translateY(0) !important; opacity: 1 !important; }
+        input, select, textarea { font-size: 16px !important; }
+        
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease-out;
+        }
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+    <div id="intro-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700">
+        <img src="logo.jpg" alt="NEXORA" class="w-48 md:w-80 logo-anim rounded-full border border-gray-800 object-cover">
+    </div>
+
+    <nav class="fixed top-0 w-full bg-black/80 backdrop-blur-md border-b border-border z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <div class="text-lg sm:text-xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <img src="logo.jpg" alt="N" class="w-8 h-8 rounded-full border border-gray-800 object-cover"> NEXORA
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-medium text-muted">
+                <a href="index.html" class="hover:text-white transition">Home</a>
+                <a href="index.html#about" class="hover:text-white transition">About</a>
+                <a href="index.html#services" class="hover:text-white transition">Services</a>
+                <a href="index.html#contact" class="hover:text-white transition">Contact</a>
+            </div>
+            
+            <div class="relative">
+                <button id="auth-button" class="px-4 py-2 sm:px-5 sm:py-2.5 bg-white text-black text-xs sm:text-sm font-semibold rounded-full hover:scale-105 transition-transform hidden">
+                    Join Community
+                </button>
+                <div id="user-profile-menu" class="hidden">
+                    <img id="user-photo" src="" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer border-2 border-transparent hover:border-white transition-all" onclick="toggleDropdown()">
+                    <div id="dropdown" class="absolute right-0 mt-2 w-48 bg-[#050505] border border-[#222] rounded-md shadow-lg py-1 z-50 dropdown-menu">
+                        <p id="user-email-display" class="block px-4 py-2 text-sm text-muted break-words"></p>
+                        <a href="#" id="sign-out-button" class="block px-4 py-2 text-sm text-white hover:bg-[#1a1a1a] transition">Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 hidden">
+        <section class="min-h-[85vh] flex flex-col items-center justify-center text-center relative reveal">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-white/[0.03] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+            <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter leading-tight max-w-5xl px-2">
+                We Make Your Dreams Into Reality.
+            </h1>
+            <p class="mt-6 text-base sm:text-lg md:text-xl text-muted max-w-2xl font-light px-4">
+                Become a Member of Our Services for Free. Earn by Your Skills.
+            </p>
+        </section>
+
+        <!-- MEMBER ONBOARDING FORM -->
+        <section id="onboarding-form-section" class="py-20 sm:py-32 border-t border-border reveal">
+            <div class="max-w-3xl mx-auto text-center px-4">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">Tell Us About Yourself</h2>
+                <p class="text-muted text-base sm:text-lg font-light mb-10">Help us understand your skills and connect you with the right opportunities.</p>
+                
+                <form id="member-profile-form" class="space-y-6 bg-[#050505] border border-border rounded-3xl p-6 sm:p-10">
+                    <input type="hidden" name="access_key" value="38b33297-e624-403d-bcb3-9fdeba3b3850">
+                    <input type="hidden" name="subject" value="New Member Profile - Nexora">
+                    
+                    <input type="text" name="name" id="form-full-name" placeholder="Full Name" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                    <!-- Added missing email field for reliable Web3Forms submission -->
+                    <input type="email" name="email" id="form-email" placeholder="Email Address" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                    <input type="number" name="age" placeholder="Age" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                    <textarea name="message" placeholder="Your Skills (e.g., Web Development, Video Editing, UI/UX Design)" rows="4" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light resize-none"></textarea>
+                    
+                    <button type="submit" id="profile-submit-btn" class="w-full py-3.5 sm:py-4 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-colors">Submit Profile</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 sm:py-32 border-t border-border reveal hidden">
+        </section>
+
+        <section id="services" class="py-20 sm:py-32 border-t border-border reveal hidden">
+        </section>
+
+        <section id="contact" class="py-20 sm:py-32 border-t border-border reveal hidden">
+        </section>
+    </main>
+
+    <footer class="border-t border-border py-12 text-center text-muted text-sm bg-black px-4">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <img src="logo.jpg" alt="N" class="w-6 h-6 rounded-full border border-gray-800 object-cover">
+            <p class="font-bold text-white tracking-widest text-lg">NEXORA</p>
+        </div>
+        <p class="mb-6 font-light">Connecting Talent. Building Opportunities.</p>
+        <p class="opacity-40">&copy; 2026 Nexora Agency. All rights reserved.</p>
+    </footer>
+
+    <!-- SUCCESS TOKEN MODAL -->
+    <div id="token-modal" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div id="token-content" class="bg-[#050505] border border-[#222] rounded-3xl p-6 sm:p-10 max-w-md w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative text-center">
+            <h2 class="text-2xl font-semibold tracking-tight mb-4">Profile Submitted!</h2>
+            <p class="text-white text-lg mb-6">We'll be in touch soon. Take care!</p>
+            <p class="text-muted text-sm mb-2">Your unique Token Number:</p>
+            <p id="display-token" class="text-white text-2xl font-bold tracking-wider mb-8 bg-black border border-[#222] py-3 px-6 rounded-xl inline-block"></p>
+            <button onclick="redirectToHome()" class="w-full py-3.5 sm:py-4 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-colors">OK</button>
+        </div>
+    </div>
+
+    <!-- ADVERTISER MODAL -->
+    <div id="advertiser-modal" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div id="adv-content" class="bg-[#050505] border border-[#222] rounded-3xl p-6 sm:p-10 max-w-2xl w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdvertiserModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-500 hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-2 pr-8">Partner With Nexora</h2>
+            <p class="text-muted text-sm sm:text-base mb-6 font-light">Drop your details below. Our team will contact your Gmail shortly.</p>
+            
+            <form id="adv-form" class="space-y-4">
+                <input type="hidden" name="access_key" value="38b33297-e624-403d-bcb3-9fdeba3b3850">
+                <input type="hidden" name="subject" value="New Advertiser Inquiry - Nexora">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                    <input type="text" name="Company_Name" placeholder="Company Name" class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                </div>
+                <input type="email" name="email" placeholder="Email Address" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                <textarea name="message" placeholder="Project Details..." rows="3" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light resize-none"></textarea>
+                <button type="submit" id="adv-submit-btn" class="w-full py-3.5 sm:py-4 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-colors">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD SCRIPT -->
+    <script>
+        // Universal function to safely submit Web3Forms in JSON format
+        function setupWeb3Form(formId, btnId, successCallback) {
+            const form = document.getElementById(formId);
+            const btn = document.getElementById(btnId);
+            
+            if (!form || !btn) return;
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Sending...';
+                btn.disabled = true;
+
+                // Converting FormData to strictly structured JSON
+                const formData = new FormData(form);
+                const object = Object.fromEntries(formData);
+                const json = JSON.stringify(object);
+
+                try {
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: json
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        if (successCallback) successCallback(result);
+                        form.reset();
+                    } else {
+                        console.error("Web3Forms API Error:", result);
+                        alert("Oops! Submission mein dikkat aayi: " + (result.message || "Please try again."));
+                    }
+                } catch (error) {
+                    console.error("Network Error:", error);
+                    alert("Internet / Network connection problem. Please check your connection.");
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        // Initialize Advertiser Form Submission
+        setupWeb3Form('adv-form', 'adv-submit-btn', function() {
+            alert("Thank you! Your request has been successfully sent to Nexora.");
+            closeAdvertiserModal();
+        });
+
+        // Initialize Member Profile Form Submission
+        setupWeb3Form('member-profile-form', 'profile-submit-btn', function() {
+            const token = "NEX-" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('display-token').innerText = token;
+            
+            document.getElementById('token-modal').classList.add('modal-active');
+            document.getElementById('token-content').classList.add('modal-content-active');
+        });
+
+        // UI & Modal Controls
+        function openAdvertiserModal() {
+            document.getElementById('advertiser-modal').classList.add('modal-active');
+            document.getElementById('adv-content').classList.add('modal-content-active');
+        }
+
+        function closeAdvertiserModal() {
+            document.getElementById('advertiser-modal').classList.remove('modal-active');
+            document.getElementById('adv-content').classList.remove('modal-content-active');
+        }
+
+        function toggleDropdown() {
+            document.getElementById('dropdown').classList.toggle('active');
+        }
+
+        window.addEventListener('click', function(e) {
+            const profileMenu = document.getElementById('user-profile-menu');
+            const dropdown = document.getElementById('dropdown');
+            if (profileMenu && !profileMenu.contains(e.target) && dropdown) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('intro-loader');
+                const mainContent = document.getElementById('main-content');
+                if (loader) {
+                    loader.classList.add('fade-out');
+                    setTimeout(() => loader.style.display = 'none', 800);
+                }
+                if (mainContent) {
+                    mainContent.classList.remove('hidden');
+                    setTimeout(() => revealElements(), 100);
+                }
+            }, 2500);
+        });
+
+        window.addEventListener('scroll', revealElements);
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

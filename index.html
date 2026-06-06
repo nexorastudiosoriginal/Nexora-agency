@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>NEXORA AGENCY - Premium Digital Community</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        background: '#000000',
+                        foreground: '#ffffff',
+                        border: '#1a1a1a',
+                        muted: '#a3a3a3'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .logo-anim { animation: logoPulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes logoPulse {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
+            30% { transform: scale(1.05) translateY(0); opacity: 1; filter: blur(0); }
+            80% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; filter: blur(20px); visibility: hidden; }
+        }
+        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; backdrop-filter: blur(16px); }
+        .modal-content-active { transform: scale(1) translateY(0) !important; opacity: 1 !important; }
+        input, select, textarea { font-size: 16px !important; }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <div id="intro-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700">
+        <img src="logo.jpg" alt="NEXORA" class="w-48 md:w-80 logo-anim rounded-full border border-gray-800 object-cover">
+    </div>
+
+    <nav class="fixed top-0 w-full bg-black/80 backdrop-blur-md border-b border-border z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <div class="text-lg sm:text-xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <img src="logo.jpg" alt="N" class="w-8 h-8 rounded-full border border-gray-800 object-cover"> NEXORA
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-medium text-muted">
+                <a href="#" class="hover:text-white transition">Home</a>
+                <a href="#about" class="hover:text-white transition">About</a>
+                <a href="#services" class="hover:text-white transition">Services</a>
+                <a href="#contact" class="hover:text-white transition">Contact</a>
+            </div>
+            <button onclick="openAuthModal()" class="px-4 py-2 sm:px-5 sm:py-2.5 bg-white text-black text-xs sm:text-sm font-semibold rounded-full hover:scale-105 transition-transform">
+                Join Community
+            </button>
+        </div>
+    </nav>
+<main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 hidden">
+        <section class="min-h-[85vh] flex flex-col items-center justify-center text-center relative reveal">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-white/[0.03] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+            <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter leading-tight max-w-5xl px-2">
+                Building The Future Through <span class="text-neutral-500 block sm:inline">Digital Talent.</span>
+            </h1>
+            <p class="mt-6 text-base sm:text-lg md:text-xl text-muted max-w-2xl font-light px-4">
+                A curated international community of creators, developers, editors, and entrepreneurs.
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
+                <button onclick="openAuthModal()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-medium transition-all duration-500 ease-in-out border border-white">
+                    Join Community
+                </button>
+                <button onclick="openAdvertiserModal()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-transparent text-white border border-border hover:border-white transition-all duration-500 ease-in-out font-medium">
+                    Invest As Advertiser
+                </button>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 sm:py-32 border-t border-border reveal">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <div class="order-2 lg:order-1 text-center lg:text-left">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">Not just an agency.<br><span class="text-muted">A global ecosystem.</span></h2>
+                    <p class="text-muted text-base sm:text-lg font-light leading-relaxed mb-6">
+                        Nexora Agency is an international digital community connecting the top 1% of developers, video editors, designers, and creators with growing startups and advertisers.
+                    </p>
+                </div>
+                <div class="order-1 lg:order-2 relative w-3/4 mx-auto lg:w-full">
+                    <div class="w-full aspect-square rounded-[2rem] border border-border bg-[#050505] flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+                        <img src="logo.jpg" alt="Nexora Sphere" class="w-1/2 opacity-50 grayscale hover:grayscale-0 transition-all duration-700 hover:scale-110 object-cover rounded-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-20 sm:py-32 border-t border-border reveal">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">Our Expertise</h2>
+                <p class="mt-4 text-muted text-base sm:text-lg">World-class execution across digital verticals.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="p-6 sm:p-8 rounded-3xl border border-border bg-[#050505] hover:border-white transition-colors duration-500 group">
+                    <i class="fa-solid fa-code text-2xl mb-6 text-muted group-hover:text-white transition-colors"></i>
+                    <h3 class="text-lg sm:text-xl font-medium mb-3">Web Development</h3>
+                    <p class="text-muted text-sm leading-relaxed font-light">Next-gen scalable architectures, React, and premium digital platforms.</p>
+                </div>
+                <div class="p-6 sm:p-8 rounded-3xl border border-border bg-[#050505] hover:border-white transition-colors duration-500 group">
+                    <i class="fa-solid fa-video text-2xl mb-6 text-muted group-hover:text-white transition-colors"></i>
+                    <h3 class="text-lg sm:text-xl font-medium mb-3">Video Editing</h3>
+                    <p class="text-muted text-sm leading-relaxed font-light">High-retention, cinematic visual storytelling designed to dominate social algorithms.</p>
+                </div>
+                <div class="p-6 sm:p-8 rounded-3xl border border-border bg-[#050505] hover:border-white transition-colors duration-500 group">
+                    <i class="fa-solid fa-compass text-2xl mb-6 text-muted group-hover:text-white transition-colors"></i>
+                    <h3 class="text-lg sm:text-xl font-medium mb-3">Branding & Design</h3>
+                    <p class="text-muted text-sm leading-relaxed font-light">Premium UI/UX, corporate identity, and aesthetics that establish market authority.</p>
+                </div>
+            </div>
+        </section>
+<section id="contact" class="py-20 sm:py-32 border-t border-border reveal">
+            <div class="max-w-3xl mx-auto text-center px-4">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">Let's Build Together</h2>
+                <p class="text-muted text-base sm:text-lg font-light mb-10">Whether you are a talented creator or a business ready to scale, we are just an email away.</p>
+                <div class="p-1 border border-border rounded-full inline-block bg-[#050505] hover:border-white transition-colors duration-300 w-full sm:w-auto overflow-hidden">
+                    <a href="mailto:nexorastudios.original@gmail.com" class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-6 py-4 rounded-full hover:bg-white hover:text-black transition-colors duration-300">
+                        <i class="fa-regular fa-envelope text-xl"></i>
+                        <span class="text-sm sm:text-lg font-medium tracking-wide truncate">nexorastudios.original@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-border py-12 text-center text-muted text-sm bg-black px-4">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <img src="logo.jpg" alt="N" class="w-6 h-6 rounded-full border border-gray-800 object-cover">
+            <p class="font-bold text-white tracking-widest text-lg">NEXORA</p>
+        </div>
+        <p class="mb-6 font-light">Connecting Talent. Building Opportunities.</p>
+        <p class="opacity-40">&copy; 2026 Nexora Agency. All rights reserved.</p>
+    </footer>
+
+    <!-- ADVERTISER FORM MODAL -->
+    <div id="advertiser-modal" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div id="adv-content" class="bg-[#050505] border border-[#222] rounded-3xl p-6 sm:p-10 max-w-2xl w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdvertiserModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-500 hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-2 pr-8">Partner With Nexora</h2>
+            <p class="text-muted text-sm sm:text-base mb-6 font-light">Drop your details below. Our team will contact your Gmail shortly.</p>
+            
+            <form id="adv-form" class="space-y-4">
+                <input type="hidden" name="access_key" value="38b33297-e624-403d-bcb3-9fdeba3b3850">
+                <input type="hidden" name="subject" value="New Advertiser Inquiry - Nexora">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                    <input type="text" name="Company_Name" placeholder="Company Name" class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                </div>
+                <input type="email" name="email" placeholder="Email Address" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light">
+                <textarea name="message" placeholder="Project Details..." rows="3" required class="w-full p-3 sm:p-4 rounded-xl border border-[#222] bg-black focus:outline-none focus:border-white transition-colors font-light resize-none"></textarea>
+                <button type="submit" id="adv-submit-btn" class="w-full py-3.5 sm:py-4 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-colors">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div id="auth-content" class="bg-[#050505] border border-[#222] rounded-3xl p-6 sm:p-10 max-w-md w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative text-center">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-500 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <img src="logo.jpg" alt="N" class="w-16 h-16 rounded-full mx-auto mb-6 border border-gray-800 object-cover">
+            <h2 class="text-2xl font-semibold tracking-tight mb-2">Join Nexora</h2>
+            <p class="text-muted mb-8 text-sm font-light">Sign in securely with Google to connect with global digital talent.</p>
+            <button id="real-google-btn" class="w-full py-4 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-transform hover:scale-[1.02] flex items-center justify-center gap-3 text-base">
+                <i class="fa-brands fa-google text-lg"></i> Continue with Google
+            </button>
+            <p class="mt-6 text-xs text-muted opacity-50">By joining, you agree to our Terms and Conditions.</p>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('intro-loader');
+                const mainContent = document.getElementById('main-content');
+                if (loader) {
+                    loader.classList.add('fade-out');
+                    setTimeout(() => loader.style.display = 'none', 800);
+                }
+                if (mainContent) {
+                    mainContent.classList.remove('hidden');
+                    setTimeout(() => revealElements(), 100);
+                }
+            }, 2500);
+        });
+
+        window.addEventListener('scroll', revealElements);
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.add('modal-active');
+            document.getElementById('auth-content').classList.add('modal-content-active');
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('modal-active');
+            document.getElementById('auth-content').classList.remove('modal-content-active');
+        }
+        function openAdvertiserModal() {
+            document.getElementById('advertiser-modal').classList.add('modal-active');
+            document.getElementById('adv-content').classList.add('modal-content-active');
+        }
+        function closeAdvertiserModal() {
+            document.getElementById('advertiser-modal').classList.remove('modal-active');
+            document.getElementById('adv-content').classList.remove('modal-content-active');
+        }
+
+        // Properly handling Web3Forms Submission via JSON
+        const advForm = document.getElementById('adv-form');
+        const advBtn = document.getElementById('adv-submit-btn');
+        if (advForm) {
+            advForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const originalText = advBtn.innerHTML;
+                advBtn.innerHTML = 'Sending...';
+                advBtn.disabled = true;
+                
+                const formData = new FormData(advForm);
+                const object = Object.fromEntries(formData);
+                const json = JSON.stringify(object);
+
+                try {
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: json
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert("Thank you! Your request has been successfully sent to Nexora.");
+                        advForm.reset();
+                        closeAdvertiserModal();
+                    } else {
+                        console.error("Web3Forms Error:", result);
+                        alert("Oops! There was a problem submitting your form: " + (result.message || "Unknown error"));
+                    }
+                } catch (error) {
+                    console.error("Network Error:", error);
+                    alert("Network Error. Please check your internet connection and try again.");
+                } finally {
+                    advBtn.innerHTML = originalText;
+                    advBtn.disabled = false;
+                }
+            });
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDajnh8dcckTGYUTe2d0TrBhvXnmFlc64s",
+            authDomain: "nexora-agency-e846d.firebaseapp.com",
+            projectId: "nexora-agency-e846d",
+            storageBucket: "nexora-agency-e846d.firebasestorage.app",
+            messagingSenderId: "619216597246",
+            appId: "1:619216597246:web:4e06b7dc8e0aa565a1f5af"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            document.getElementById('real-google-btn').addEventListener('click', () => {
+                if (window.location.protocol === 'file:') {
+                    alert("Security Warning: Google Login double-click ki hui file (file://) me nahi chalta. Isko chalane ke liye file ko Live Server par run karein ya Website ko Internet par host karein.");
+                    return;
+                }
+                const provider = new GoogleAuthProvider();
+                signInWithPopup(auth, provider)
+                    .then((result) => {
+                        alert("Welcome to Nexora, " + result.user.displayName + "!");
+                        closeAuthModal();
+                        window.location.href = 'dashboard.html';
+                    }).catch((error) => {
+                        alert("Login Error: " + error.message);
+                    });
+            });
+        } catch (error) {
+            console.error("Firebase Error:", error);
+        }
+    </script>
+</body>
+</html>
