@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>NEXORA AGENCY - Premium Digital Community</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- STRICT iOS DARK MODE THEME WITH GREEN ACCENT -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        background: '#000000',
+                        foreground: '#ffffff',
+                        /* Authentic Apple iOS System Colors */
+                        systemGray: '#8E8E93',
+                        systemGreen: '#32D74B', /* iOS Dark Mode System Green */
+                        glassBorder: 'rgba(255, 255, 255, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+        
+        /* Clean iOS Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2C2C2E; border-radius: 10px; }
+
+        /* =========================================
+           TRUE iOS FROSTED GLASS & GREEN BUTTONS
+           ========================================= */
+        
+        /* Native Apple Glassmorphism */
+        .ios-glass {
+            background: rgba(28, 28, 30, 0.55); 
+            backdrop-filter: saturate(180%) blur(25px);
+            -webkit-backdrop-filter: saturate(180%) blur(25px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Apple System Green Primary Button */
+        .ios-btn-primary {
+            background-color: #32D74B;
+            color: #000000; /* Black text on green for that premium contrast */
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .ios-btn-primary:active {
+            transform: scale(0.95); /* iOS Spring tap effect */
+            background-color: #28B840;
+        }
+        .ios-btn-primary:hover {
+            box-shadow: 0 0 20px rgba(50, 215, 75, 0.3);
+        }
+
+        /* Apple Glass Secondary Button */
+        .ios-btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            transition: all 0.2s ease;
+        }
+        .ios-btn-secondary:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .logo-anim { animation: logoPulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes logoPulse {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
+            30% { transform: scale(1.05) translateY(0); opacity: 1; filter: blur(0); }
+            80% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; filter: blur(20px); visibility: hidden; }
+        }
+
+        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); }
+        .modal-content-active { transform: scale(1) translateY(0) !important; opacity: 1 !important; }
+
+        .portfolio-item { overflow: hidden; border-radius: 1.5rem; position: relative; cursor: pointer; }
+        .portfolio-item img { transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .portfolio-item:hover img { transform: scale(1.03); }
+        
+        input, select, textarea { 
+            font-size: 16px !important; 
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #32D74B !important;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-systemGreen selection:text-black font-sans">
+
+    <!-- ============================================== -->
+    <!-- CLEAN VIDEO BACKGROUND (Subtle Green Hint) -->
+    <!-- ============================================== -->
+    <div class="fixed inset-0 z-[-20] w-full h-full bg-black overflow-hidden pointer-events-none">
+        <video id="bg-video" autoplay loop muted playsinline webkit-playsinline class="absolute inset-0 w-full h-full object-cover opacity-70">
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4" type="video/mp4">
+        </video>
+        <!-- Neutral Black Gradients purely for text readability -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-black/95"></div>
+    </div>
+    <!-- ============================================== -->
+
+    <!-- INTRO LOADER -->
+    <div id="intro-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700">
+        <img src="logo.jpg" alt="NEXORA" class="w-48 md:w-80 logo-anim rounded-full border border-white/10 object-cover">
+    </div>
+
+    <!-- NAVBAR (iOS Dynamic Island / Header style) -->
+    <nav class="fixed top-0 w-full ios-glass border-b border-glassBorder z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
+            <div class="text-lg sm:text-xl font-semibold tracking-tight flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <img src="logo.jpg" alt="N" class="w-8 h-8 rounded-full border border-white/20 object-cover"> NEXORA
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-medium text-systemGray">
+                <a href="#" class="hover:text-white transition-colors">Home</a>
+                <a href="#about" class="hover:text-white transition-colors">About</a>
+                <a href="#services" class="hover:text-white transition-colors">Services</a>
+                <a href="#portfolio" class="hover:text-white transition-colors">Portfolio</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="user-profile-nav-container" class="hidden items-center gap-3"></div>
+                <button id="join-community-btn" onclick="openAuthModal()" class="ios-btn-primary px-5 py-2 text-sm font-bold rounded-full">
+                    Join Community
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 hidden">
+        
+        <!-- HERO -->
+        <section class="min-h-[80vh] flex flex-col items-center justify-center text-center relative reveal">
+            <!-- Halka sa green glow text ke peeche -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-systemGreen/[0.04] rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+
+            <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-[84px] font-semibold tracking-[-0.03em] leading-[1.05] max-w-5xl px-2">
+                Building The Future Through <span class="text-systemGray block sm:inline">Digital Talent.</span>
+            </h1>
+            <p class="mt-6 text-base sm:text-lg md:text-xl text-systemGray max-w-2xl font-light px-4">
+                A curated international community of creators, developers, editors, and entrepreneurs.
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4">
+                <button onclick="openAuthModal()" class="ios-btn-primary w-full sm:w-auto px-8 py-4 rounded-full font-bold text-base">
+                    Join Community
+                </button>
+                <button onclick="openAdvertiserModal()" class="ios-btn-secondary w-full sm:w-auto px-8 py-4 rounded-full font-medium text-base">
+                    Invest As Advertiser
+                </button>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="py-20 sm:py-32 border-t border-glassBorder reveal my-10">
+            <div class="ios-glass rounded-[2.5rem] p-8 sm:p-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                    <div class="order-2 lg:order-1 text-center lg:text-left">
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">Not just an agency.<br><span class="text-systemGreen">A global ecosystem.</span></h2>
+                        <p class="text-systemGray text-base sm:text-lg font-light leading-relaxed mb-6">
+                            Nexora Agency is an international digital community connecting the top 1% of developers, video editors, designers, and creators with growing startups and advertisers.
+                        </p>
+                    </div>
+                    <div class="order-1 lg:order-2 relative w-3/4 mx-auto lg:w-full">
+                        <div class="w-full aspect-square rounded-[2rem] border border-glassBorder bg-black/40 flex items-center justify-center overflow-hidden relative">
+                            <img src="logo.jpg" alt="Nexora Sphere" class="w-3/5 opacity-80 transition-all duration-700 hover:scale-105 object-cover rounded-full">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="py-20 sm:py-32 border-t border-glassBorder reveal">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">Our Expertise</h2>
+                <p class="mt-4 text-systemGray text-base sm:text-lg">World-class execution across digital verticals.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="ios-glass p-8 rounded-[2rem] transition-transform duration-300 hover:scale-[1.02] group">
+                    <i class="fa-solid fa-code text-2xl mb-6 text-systemGreen group-hover:drop-shadow-[0_0_8px_rgba(50,215,75,0.5)] transition-all"></i>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-3">Web Development</h3>
+                    <p class="text-systemGray text-sm leading-relaxed font-light">Next-gen scalable architectures, React, and premium digital platforms.</p>
+                </div>
+                <div class="ios-glass p-8 rounded-[2rem] transition-transform duration-300 hover:scale-[1.02] group">
+                    <i class="fa-solid fa-video text-2xl mb-6 text-systemGreen group-hover:drop-shadow-[0_0_8px_rgba(50,215,75,0.5)] transition-all"></i>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-3">Video Editing</h3>
+                    <p class="text-systemGray text-sm leading-relaxed font-light">High-retention, cinematic visual storytelling designed to dominate social algorithms.</p>
+                </div>
+                <div class="ios-glass p-8 rounded-[2rem] transition-transform duration-300 hover:scale-[1.02] group">
+                    <i class="fa-solid fa-compass text-2xl mb-6 text-systemGreen group-hover:drop-shadow-[0_0_8px_rgba(50,215,75,0.5)] transition-all"></i>
+                    <h3 class="text-lg sm:text-xl font-semibold mb-3">Branding & Design</h3>
+                    <p class="text-systemGray text-sm leading-relaxed font-light">Premium UI/UX, corporate identity, and aesthetics that establish market authority.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO -->
+        <section id="portfolio" class="py-20 sm:py-32 border-t border-glassBorder reveal">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">Our Portfolio</h2>
+                <p class="mt-4 text-systemGray text-base sm:text-lg">Premium designs, branding, and digital platforms.</p>
+                
+                <div class="flex flex-wrap justify-center gap-3 mt-8 p-1.5 ios-glass rounded-full inline-flex mx-auto">
+                    <!-- iOS Segmented Control Style -->
+                    <button onclick="filterPortfolio('all')" class="px-6 py-2 rounded-full bg-white/20 text-white text-sm font-medium transition-all port-btn active-tab">All</button>
+                    <button onclick="filterPortfolio('branding')" class="px-6 py-2 rounded-full bg-transparent text-systemGray hover:text-white text-sm font-medium transition-all port-btn">Branding</button>
+                    <button onclick="filterPortfolio('social')" class="px-6 py-2 rounded-full bg-transparent text-systemGray hover:text-white text-sm font-medium transition-all port-btn">Social</button>
+                    <button onclick="filterPortfolio('web')" class="px-6 py-2 rounded-full bg-transparent text-systemGray hover:text-white text-sm font-medium transition-all port-btn">Web</button>
+                </div>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="portfolio-item ios-glass filter-item branding" onclick="openImage('p5.jpg')">
+                    <img src="p5.jpg" alt="Nails By Ridhi" class="w-full h-64 object-cover object-center">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">Nails By Ridhi</h4>
+                        <p class="text-xs text-systemGray mt-1">Logo & Brand Identity</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item ios-glass filter-item social" onclick="openImage('p2.jpg')">
+                    <img src="p2.jpg" alt="Gadget Galaxy" class="w-full h-64 object-cover object-center">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">Gadget Galaxy Powerbank</h4>
+                        <p class="text-xs text-systemGray mt-1">Social Media Ad</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item ios-glass filter-item branding" onclick="openImage('p7.jpg')">
+                    <img src="p7.jpg" alt="Belyy Farm" class="w-full h-64 object-cover object-center">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">Belyy Farm</h4>
+                        <p class="text-xs text-systemGray mt-1">Corporate Branding</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item ios-glass filter-item social" onclick="openImage('p9.jpg')">
+                    <img src="p9.jpg" alt="Spa Center" class="w-full h-64 object-cover object-top">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">Beauty & Spa Center</h4>
+                        <p class="text-xs text-systemGray mt-1">Promotional Flyer</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item ios-glass filter-item branding" onclick="openImage('p1.jpg')">
+                    <img src="p1.jpg" alt="Bride to be" class="w-full h-64 object-cover object-center">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">bride to be</h4>
+                        <p class="text-xs text-systemGray mt-1">Minimalist Logo</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-item ios-glass filter-item social" onclick="openImage('p8.jpg')">
+                    <img src="p8.jpg" alt="Summer Offer" class="w-full h-64 object-cover object-center">
+                    <div class="p-5 border-t border-glassBorder">
+                        <h4 class="font-semibold text-white">Tropical Summer Offer</h4>
+                        <p class="text-xs text-systemGray mt-1">Marketing Graphic</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="border-t border-glassBorder py-12 text-center text-systemGray text-sm bg-black/50 backdrop-blur-xl px-4 mt-20 relative z-10">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <img src="logo.jpg" alt="N" class="w-6 h-6 rounded-full border border-white/20 object-cover">
+            <p class="font-semibold text-white tracking-widest text-lg">NEXORA</p>
+        </div>
+        <p class="mb-4 font-light">Connecting Talent. Building Opportunities.</p>
+        <p class="mb-8 font-medium text-systemGreen hover:text-white transition-colors">
+            <a href="mailto:nexoragency@hotmail.com">nexoragency@hotmail.com</a>
+        </p>
+        <p class="opacity-50 text-xs">&copy; 2026 Nexora Agency. All rights reserved.</p>
+    </footer>
+
+    <!-- MODALS -->
+    <!-- Image Lightbox -->
+    <div id="image-lightbox" class="fixed inset-0 z-[80] bg-black/60 opacity-0 pointer-events-none transition-all duration-300 flex items-center justify-center p-4" style="backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);" onclick="closeImage()">
+        <button class="absolute top-8 right-8 text-white/50 hover:text-white transition text-4xl">&times;</button>
+        <img id="lightbox-img" src="" alt="Portfolio View" class="max-w-full max-h-[90vh] object-contain rounded-2xl transform scale-95 transition-transform duration-300">
+    </div>
+
+    <!-- Advertiser Modal -->
+    <div id="advertiser-modal" class="fixed inset-0 z-50 bg-black/40 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4">
+        <div id="adv-content" class="ios-glass rounded-[2rem] p-6 sm:p-10 max-w-2xl w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdvertiserModal()" class="absolute top-6 right-6 text-systemGray hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-2 pr-8 text-white">Partner With Nexora</h2>
+            <p class="text-systemGray text-sm sm:text-base mb-6 font-light">Drop your details below. Our team will contact your Gmail shortly.</p>
+           <form id="adv-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+                <input type="hidden" name="access_key" value="ad07c4e1-35e7-4f76-afe7-8a22e8eed615">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" name="Client_Name" placeholder="Full Name" required class="w-full p-4 rounded-xl text-white outline-none">
+                    <input type="text" name="Company_Name" placeholder="Company Name" class="w-full p-4 rounded-xl text-white outline-none">
+                </div>
+                <input type="email" name="Email_Address" placeholder="Gmail Address" required class="w-full p-4 rounded-xl text-white outline-none">
+                <input type="text" name="Budget" placeholder="Your Budget (e.g., $5000)" class="w-full p-4 rounded-xl text-white outline-none">
+                <textarea name="Project_Details" placeholder="Project Details..." rows="3" required class="w-full p-4 rounded-xl text-white outline-none resize-none"></textarea>
+                
+                <button type="submit" id="adv-submit-btn" class="ios-btn-primary w-full py-4 rounded-xl font-bold text-lg mt-2">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/40 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4">
+        <div id="auth-content" class="ios-glass rounded-[2.5rem] p-8 sm:p-12 max-w-md w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative text-center">
+            <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-systemGray hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <img src="logo.jpg" alt="N" class="w-20 h-20 rounded-full mx-auto mb-6 border border-white/20 object-cover shadow-sm">
+            <h2 class="text-2xl font-semibold tracking-tight mb-2 text-white">Join Nexora</h2>
+            <p class="text-systemGray mb-8 text-sm font-light">Sign in securely with Google to connect with global digital talent.</p>
+            
+            <button id="real-google-btn" class="ios-btn-primary w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 text-base">
+                <i class="fa-brands fa-google text-lg"></i> Continue with Google
+            </button>
+            
+            <p class="mt-8 text-xs text-systemGray opacity-60">By joining, you agree to our Terms and Conditions.</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // VIDEO FADE IN/OUT LOOP LOGIC 
+        document.addEventListener("DOMContentLoaded", () => {
+            const video = document.getElementById('bg-video');
+            if (video) {
+                video.play().catch(e => console.log('Autoplay handled by interaction:', e));
+                
+                video.addEventListener('timeupdate', () => {
+                    const duration = video.duration;
+                    const current = video.currentTime;
+                    if(duration > 0) {
+                        if(current < 0.5) video.style.opacity = (current / 0.5 * 0.7).toString(); 
+                        else if (current >= duration - 0.5) video.style.opacity = (((duration - current) / 0.5) * 0.7).toString();
+                        else video.style.opacity = '0.7';
+                    }
+                });
+
+                video.addEventListener('ended', () => {
+                    video.currentTime = 0;
+                    video.play();
+                });
+            }
+        });
+
+        // Intro Loader & Reveals
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('intro-loader');
+                const mainContent = document.getElementById('main-content');
+                if (loader) {
+                    loader.classList.add('fade-out');
+                    setTimeout(() => loader.style.display = 'none', 800);
+                }
+                if (mainContent) {
+                    mainContent.classList.remove('hidden');
+                    setTimeout(() => revealElements(), 100);
+                }
+            }, 2500);
+        });
+
+        // Scroll Animations
+        window.addEventListener('scroll', revealElements);
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        // Modals
+        function openAuthModal() { document.getElementById('auth-modal').classList.add('modal-active'); document.getElementById('auth-content').classList.add('modal-content-active'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.remove('modal-active'); document.getElementById('auth-content').classList.remove('modal-content-active'); }
+        function openAdvertiserModal() { document.getElementById('advertiser-modal').classList.add('modal-active'); document.getElementById('adv-content').classList.add('modal-content-active'); }
+        function closeAdvertiserModal() { document.getElementById('advertiser-modal').classList.remove('modal-active'); document.getElementById('adv-content').classList.remove('modal-content-active'); }
+
+        // Formspree Submit
+        const advForm = document.getElementById('adv-form');
+        const advBtn = document.getElementById('adv-submit-btn');
+        advForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const originalText = advBtn.innerHTML;
+            advBtn.innerHTML = 'Sending...';
+            advBtn.disabled = true;
+            try {
+                const response = await fetch(advForm.action, { method: 'POST', body: new FormData(advForm), headers: { 'Accept': 'application/json' }});
+                if (response.ok) { alert("Sent successfully to Nexora!"); advForm.reset(); closeAdvertiserModal(); } 
+                else { alert("Oops! Error submitting form."); }
+            } catch (error) { alert("Network Error."); } finally { advBtn.innerHTML = originalText; advBtn.disabled = false; }
+        });
+
+        // Portfolio Image Lightbox System
+        function openImage(imgSrc) {
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imgSrc;
+            lightbox.classList.add('modal-active');
+            setTimeout(() => lightboxImg.classList.replace('scale-95', 'scale-100'), 50);
+        }
+
+        function closeImage() {
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.classList.replace('scale-100', 'scale-95');
+            setTimeout(() => lightbox.classList.remove('modal-active'), 100);
+        }
+
+        // Portfolio Category Filter System
+        function filterPortfolio(category) {
+            const items = document.querySelectorAll('.filter-item');
+            const buttons = document.querySelectorAll('.port-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-white/20', 'text-white');
+                btn.classList.add('bg-transparent', 'text-systemGray');
+            });
+            event.target.classList.remove('bg-transparent', 'text-systemGray');
+            event.target.classList.add('bg-white/20', 'text-white');
+
+            items.forEach(item => {
+                if(category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                    setTimeout(() => item.style.opacity = '1', 50);
+                } else {
+                    item.style.opacity = '0';
+                    setTimeout(() => item.style.display = 'none', 300);
+                }
+            });
+        }
+    </script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDajnh8dcckTGYUTe2d0TrBhvXnmFlc64s",
+            authDomain: "nexora-agency-e846d.firebaseapp.com",
+            projectId: "nexora-agency-e846d",
+            storageBucket: "nexora-agency-e846d.firebasestorage.app",
+            messagingSenderId: "619216597246",
+            appId: "1:619216597246:web:4e06b7dc8e0aa565a1f5af"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const googleProvider = new GoogleAuthProvider();
+
+            const joinCommunityBtn = document.getElementById('join-community-btn');
+            const userProfileNavContainer = document.getElementById('user-profile-nav-container');
+
+            window.logoutUser = function() {
+                signOut(auth).then(() => {
+                    alert("Logged out successfully!");
+                    window.location.href = 'index.html'; 
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                    alert("Error logging out.");
+                });
+            };
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    if (userProfileNavContainer) {
+                        userProfileNavContainer.innerHTML = `
+                            <img src="${user.photoURL || 'logo.jpg'}" alt="${user.displayName || 'User'}" 
+                                class="w-8 h-8 rounded-full border border-white/20 object-cover cursor-pointer hover:border-systemGreen transition-all" 
+                                title="${user.displayName || 'User'} - Click to go to Dashboard"
+                                onclick="window.location.href='dashboard.html'">
+                            <button onclick="window.logoutUser()" class="ios-btn-secondary px-3 py-1.5 text-xs rounded-full">Logout</button>
+                        `;
+                        userProfileNavContainer.classList.remove('hidden');
+                        userProfileNavContainer.classList.add('flex'); 
+                    }
+                    if (joinCommunityBtn) {
+                        joinCommunityBtn.classList.add('hidden');
+                    }
+                } else {
+                    if (userProfileNavContainer) {
+                        userProfileNavContainer.classList.add('hidden');
+                        userProfileNavContainer.classList.remove('flex');
+                    }
+                    if (joinCommunityBtn) {
+                        joinCommunityBtn.classList.remove('hidden');
+                    }
+                }
+            });
+
+            document.getElementById('real-google-btn').addEventListener('click', () => {
+                if (window.location.protocol === 'file:') {
+                    alert("Security Warning: File ko Double-Click se open karne par Google Login kaam nahi karega. VS Code 'Live Server' use karein ya website ko online upload karein.");
+                    return;
+                }
+                signInWithPopup(auth, googleProvider)
+                    .then((result) => {
+                        alert("Welcome to Nexora, " + result.user.displayName + "!");
+                        closeAuthModal();
+                        window.location.href = 'dashboard.html'; 
+                    }).catch((error) => {
+                        console.error("Login Error:", error);
+                        alert("Login Error: " + error.message);
+                    });
+            });
+
+        } catch (error) {
+            console.error("Firebase Initialization Error:", error);
+            alert("Firebase initialization failed. Check console for details.");
+        }
+    </script>
+</body>
+</html>
