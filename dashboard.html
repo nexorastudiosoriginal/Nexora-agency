@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>NEXORA AGENCY - Member Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- STRICT iOS DARK MODE THEME WITH GREEN ACCENT -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        background: '#000000',
+                        foreground: '#ffffff',
+                        systemGray: '#8E8E93',
+                        systemGreen: '#32D74B', /* iOS Dark Mode System Green */
+                        glassBorder: 'rgba(255, 255, 255, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+        
+        /* Clean iOS Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2C2C2E; border-radius: 10px; }
+
+        /* =========================================
+           TRUE iOS FROSTED GLASS & GREEN BUTTONS
+           ========================================= */
+        
+        .ios-glass {
+            background: rgba(28, 28, 30, 0.55); 
+            backdrop-filter: saturate(180%) blur(25px);
+            -webkit-backdrop-filter: saturate(180%) blur(25px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .ios-btn-primary {
+            background-color: #32D74B;
+            color: #000000;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .ios-btn-primary:active {
+            transform: scale(0.95);
+            background-color: #28B840;
+        }
+        .ios-btn-primary:hover {
+            box-shadow: 0 0 20px rgba(50, 215, 75, 0.3);
+        }
+
+        .ios-btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            transition: all 0.2s ease;
+        }
+        .ios-btn-secondary:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .logo-anim { animation: logoPulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes logoPulse {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; filter: blur(10px); }
+            30% { transform: scale(1.05) translateY(0); opacity: 1; filter: blur(0); }
+            80% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; filter: blur(20px); visibility: hidden; }
+        }
+
+        .fade-out { animation: fadeOut 0.8s ease-out forwards; }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .modal-active { opacity: 1 !important; pointer-events: auto !important; backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); }
+        .modal-content-active { transform: scale(1) translateY(0) !important; opacity: 1 !important; }
+
+        input, select, textarea { 
+            font-size: 16px !important; 
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #32D74B !important;
+        }
+
+        /* iOS Context Menu Style for Dropdown */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-systemGreen selection:text-black font-sans">
+
+    <!-- ============================================== -->
+    <!-- CLEAN VIDEO BACKGROUND (Subtle Green Hint) -->
+    <!-- ============================================== -->
+    <div class="fixed inset-0 z-[-20] w-full h-full bg-black overflow-hidden pointer-events-none">
+        <video id="bg-video" autoplay loop muted playsinline webkit-playsinline class="absolute inset-0 w-full h-full object-cover opacity-70">
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4" type="video/mp4">
+        </video>
+        <!-- Neutral Black Gradients purely for text readability -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-black/95"></div>
+    </div>
+    <!-- ============================================== -->
+
+    <div id="intro-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black text-white transition-opacity duration-700">
+        <img src="logo.jpg" alt="NEXORA" class="w-48 md:w-80 logo-anim rounded-full border border-white/10 object-cover">
+    </div>
+
+    <!-- NAVBAR (iOS Dynamic Island / Header style) -->
+    <nav class="fixed top-0 w-full ios-glass border-b border-glassBorder z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
+            <div class="text-lg sm:text-xl font-semibold tracking-tight flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                <img src="logo.jpg" alt="N" class="w-8 h-8 rounded-full border border-white/20 object-cover"> NEXORA
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-medium text-systemGray">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <a href="index.html#about" class="hover:text-white transition-colors">About</a>
+                <a href="index.html#services" class="hover:text-white transition-colors">Services</a>
+                <a href="index.html#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+            
+            <div class="relative">
+                <button id="auth-button" class="ios-btn-primary px-5 py-2 text-sm font-bold rounded-full hidden">
+                    Join Community
+                </button>
+                <div id="user-profile-menu" class="hidden"> 
+                    <img id="user-photo" src="logo.jpg" alt="Profile" class="w-9 h-9 rounded-full cursor-pointer border-2 border-transparent hover:border-systemGreen transition-all shadow-sm" onclick="toggleDropdown()">
+                    <div id="dropdown" class="absolute right-0 mt-3 w-56 ios-glass rounded-2xl shadow-2xl py-2 z-50 dropdown-menu">
+                        <p id="user-email-display" class="block px-5 py-3 text-xs text-systemGray font-medium break-words border-b border-white/10"></p>
+                        <a href="#" id="sign-out-button" class="block px-5 py-3 text-sm text-red-400 hover:bg-white/10 hover:text-red-300 transition-colors font-medium">Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 hidden">
+        
+        <!-- HERO DASHBOARD -->
+        <section class="min-h-[70vh] flex flex-col items-center justify-center text-center relative reveal">
+            <!-- Subtle Green Glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-systemGreen/[0.04] rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-[84px] font-semibold tracking-[-0.03em] leading-[1.05] max-w-5xl px-2">
+                We Make Your Dreams <span class="text-systemGray block sm:inline">Into Reality.</span>
+            </h1>
+            <p class="mt-6 text-base sm:text-lg md:text-xl text-systemGray max-w-2xl font-light px-4">
+                Become a Member of Our Services for Free. Earn by Your Skills.
+            </p>
+        </section>
+
+        <!-- MEMBER ONBOARDING FORM -->
+        <section id="onboarding-form-section" class="py-20 sm:py-32 border-t border-glassBorder reveal my-10">
+            <div class="max-w-3xl mx-auto text-center px-4 ios-glass rounded-[2.5rem] p-8 sm:p-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-4">Tell Us About Yourself</h2>
+                <p class="text-systemGray text-base sm:text-lg font-light mb-10">Help us understand your skills and connect you with the right opportunities.</p>
+                
+                <form id="member-profile-form" class="space-y-4 text-left">
+                    <input type="hidden" name="access_key" value="ad07c4e1-35e7-4f76-afe7-8a22e8eed615">
+                    <input type="hidden" name="subject" value="New Member Profile - Nexora">
+                    
+                    <!-- 🚀 HIDDEN TOKEN FIELD FOR WEB3FORMS -->
+                    <input type="hidden" name="Token_Number" id="hidden-token-input" value="">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" name="name" id="form-full-name" placeholder="Full Name" required class="w-full p-4 rounded-xl text-white outline-none">
+                        <input type="number" name="age" placeholder="Age" required class="w-full p-4 rounded-xl text-white outline-none">
+                    </div>
+                    <input type="email" name="email" id="form-email" placeholder="Email Address" required class="w-full p-4 rounded-xl text-white outline-none">
+                    <textarea name="message" placeholder="Your Skills (e.g., Web Development, Video Editing, UI/UX Design)" rows="4" required class="w-full p-4 rounded-xl text-white outline-none resize-none"></textarea>
+                    
+                    <button type="submit" id="profile-submit-btn" class="ios-btn-primary w-full py-4 rounded-xl font-bold text-lg mt-4 shadow-lg">Submit Profile</button>
+                </form>
+            </div>
+        </section>
+        
+        <section id="about" class="py-20 sm:py-32 border-t border-glassBorder reveal hidden"></section>
+        <section id="services" class="py-20 sm:py-32 border-t border-glassBorder reveal hidden"></section>
+        <section id="contact" class="py-20 sm:py-32 border-t border-glassBorder reveal hidden"></section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-glassBorder py-12 text-center text-systemGray text-sm bg-black/50 backdrop-blur-xl px-4 relative z-10">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <img src="logo.jpg" alt="N" class="w-6 h-6 rounded-full border border-white/20 object-cover">
+            <p class="font-semibold text-white tracking-widest text-lg">NEXORA</p>
+        </div>
+        <p class="mb-4 font-light">Connecting Talent. Building Opportunities.</p>
+        <p class="opacity-50 text-xs">&copy; 2026 Nexora Agency. All rights reserved.</p>
+    </footer>
+
+    <!-- SUCCESS TOKEN MODAL -->
+    <div id="token-modal" class="fixed inset-0 z-50 bg-black/40 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4">
+        <div id="token-content" class="ios-glass rounded-[2.5rem] p-8 sm:p-12 max-w-md w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative text-center">
+            <div class="w-16 h-16 rounded-full bg-systemGreen/20 flex items-center justify-center mx-auto mb-6 border border-systemGreen/30">
+                <i class="fa-solid fa-check text-2xl text-systemGreen"></i>
+            </div>
+            <h2 class="text-2xl font-semibold tracking-tight mb-2 text-white">Profile Submitted!</h2>
+            <p class="text-systemGray text-base mb-8">We'll be in touch soon. Take care!</p>
+            
+            <p class="text-systemGray text-xs uppercase tracking-widest mb-2 font-medium">Your Unique Token Number</p>
+            <p id="display-token" class="text-systemGreen text-xl sm:text-2xl font-mono font-bold tracking-widest mb-8 bg-black/30 border border-white/10 py-4 px-6 rounded-2xl shadow-inner inline-block"></p>
+            
+            <button onclick="redirectToHome()" class="ios-btn-primary w-full py-4 rounded-xl font-bold">Return Home</button>
+        </div>
+    </div>
+
+    <!-- ADVERTISER MODAL -->
+    <div id="advertiser-modal" class="fixed inset-0 z-50 bg-black/40 opacity-0 pointer-events-none transition-all duration-500 flex items-center justify-center p-4">
+        <div id="adv-content" class="ios-glass rounded-[2rem] p-6 sm:p-10 max-w-2xl w-[95%] sm:w-full transform scale-95 translate-y-10 opacity-0 transition-all duration-500 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdvertiserModal()" class="absolute top-6 right-6 text-systemGray hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-2 pr-8 text-white">Partner With Nexora</h2>
+            <p class="text-systemGray text-sm sm:text-base mb-6 font-light">Drop your details below. Our team will contact your Gmail shortly.</p>
+            
+            <form id="adv-form" class="space-y-4">
+                <input type="hidden" name="access_key" value="ad07c4e1-35e7-4f76-afe7-8a22e8eed615">
+                <input type="hidden" name="subject" value="New Advertiser Inquiry - Nexora">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full p-4 rounded-xl text-white outline-none">
+                    <input type="text" name="Company_Name" placeholder="Company Name" class="w-full p-4 rounded-xl text-white outline-none">
+                </div>
+                <input type="email" name="email" placeholder="Email Address" required class="w-full p-4 rounded-xl text-white outline-none">
+                <textarea name="message" placeholder="Project Details..." rows="3" required class="w-full p-4 rounded-xl text-white outline-none resize-none"></textarea>
+                <button type="submit" id="adv-submit-btn" class="ios-btn-primary w-full py-4 rounded-xl font-bold text-lg mt-2">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD SCRIPT WITH FIREBASE (TOKEN & DB) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDajnh8dcckTGYUTe2d0TrBhvXnmFlc64s",
+            authDomain: "nexora-agency-e846d.firebaseapp.com",
+            projectId: "nexora-agency-e846d",
+            storageBucket: "nexora-agency-e846d.firebasestorage.app",
+            messagingSenderId: "619216597246",
+            appId: "1:619216597246:web:4e06b7dc8e0aa565a1f5af"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make logout function globally accessible across pages
+        if (!window.logoutUser) {
+            window.logoutUser = function() {
+                signOut(auth).then(() => {
+                    alert("Logged out successfully!");
+                    window.location.href = 'index.html'; 
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                    alert("Error logging out.");
+                });
+            };
+        }
+
+        // --- Authentication State Listener ---
+        onAuthStateChanged(auth, (user) => {
+            const authButton = document.getElementById('auth-button');
+            const userProfileMenu = document.getElementById('user-profile-menu');
+            const userPhoto = document.getElementById('user-photo');
+            const userEmailDisplay = document.getElementById('user-email-display');
+            const signOutButton = document.getElementById('sign-out-button');
+            const formFullName = document.getElementById('form-full-name');
+            const formEmail = document.getElementById('form-email');
+
+            if (user) {
+                if (authButton) authButton.classList.add('hidden');
+                if (userProfileMenu) userProfileMenu.classList.remove('hidden');
+                
+                if (userPhoto) userPhoto.src = user.photoURL || 'logo.jpg';
+                if (userEmailDisplay) userEmailDisplay.innerText = user.email || '';
+                
+                if (formFullName) formFullName.value = user.displayName || '';
+                if (formEmail) formEmail.value = user.email || '';
+                
+                if (signOutButton) signOutButton.onclick = window.logoutUser;
+
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Advertiser Web3Forms Function
+        const advForm = document.getElementById('adv-form');
+        const advBtn = document.getElementById('adv-submit-btn');
+        if (advForm && advBtn) {
+            advForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const originalText = advBtn.innerHTML;
+                advBtn.innerHTML = 'Sending...';
+                advBtn.disabled = true;
+
+                const formData = new FormData(advForm);
+                const json = JSON.stringify(Object.fromEntries(formData));
+
+                try {
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: json
+                    });
+                    if (response.ok) {
+                        alert("Thank you! Your request has been successfully sent to Nexora.");
+                        advForm.reset();
+                        closeAdvertiserModal();
+                    } else {
+                        alert("Oops! Submission issue. Try again.");
+                    }
+                } catch (error) {
+                    alert("Network connection problem.");
+                } finally {
+                    advBtn.innerHTML = originalText;
+                    advBtn.disabled = false;
+                }
+            });
+        }
+
+        // 🚀 REAL TOKEN + FIREBASE SYSTEM (Member Form)
+        const memberForm = document.getElementById('member-profile-form');
+        const profileBtn = document.getElementById('profile-submit-btn');
+
+        if (memberForm && profileBtn) {
+            memberForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const uniqueToken = "NEX-" + Math.floor(100000 + Math.random() * 900000);
+                document.getElementById('hidden-token-input').value = uniqueToken;
+
+                profileBtn.innerHTML = 'Saving Data...';
+                profileBtn.disabled = true;
+
+                const formData = new FormData(memberForm);
+                const object = Object.fromEntries(formData);
+
+                try {
+                    // Firebase save
+                    await addDoc(collection(db, "members_data"), {
+                        fullName: object.name,
+                        email: object.email,
+                        age: object.age,
+                        skills: object.message,
+                        token: uniqueToken,
+                        timestamp: serverTimestamp(),
+                        status: "Under Review"
+                    });
+
+                    // Email send
+                    profileBtn.innerHTML = 'Sending Email...';
+                    const json = JSON.stringify(object);
+                    const emailResponse = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: json
+                    });
+
+                    if (emailResponse.ok) {
+                        document.getElementById('display-token').innerText = uniqueToken;
+                        document.getElementById('token-modal').classList.add('modal-active');
+                        document.getElementById('token-content').classList.add('modal-content-active');
+                        memberForm.reset();
+                    } else {
+                        alert("Saved to Database, but email delivery failed.");
+                    }
+                } catch (error) {
+                    console.error("Firebase Error:", error);
+                    alert("Error saving data. Make sure Firestore is enabled.");
+                } finally {
+                    profileBtn.innerHTML = 'Submit Profile';
+                    profileBtn.disabled = false;
+                }
+            });
+        }
+
+        // VIDEO FADE IN/OUT LOOP LOGIC
+        document.addEventListener("DOMContentLoaded", () => {
+            const video = document.getElementById('bg-video');
+            if (video) {
+                video.play().catch(e => console.log('Autoplay handled by interaction:', e));
+                
+                video.addEventListener('timeupdate', () => {
+                    const duration = video.duration;
+                    const current = video.currentTime;
+                    if(duration > 0) {
+                        if(current < 0.5) video.style.opacity = (current / 0.5 * 0.7).toString(); 
+                        else if (current >= duration - 0.5) video.style.opacity = (((duration - current) / 0.5) * 0.7).toString();
+                        else video.style.opacity = '0.7';
+                    }
+                });
+
+                video.addEventListener('ended', () => {
+                    video.currentTime = 0;
+                    video.play();
+                });
+            }
+        });
+
+        // UI Functions
+        window.openAdvertiserModal = () => { document.getElementById('advertiser-modal').classList.add('modal-active'); document.getElementById('adv-content').classList.add('modal-content-active'); };
+        window.closeAdvertiserModal = () => { document.getElementById('advertiser-modal').classList.remove('modal-active'); document.getElementById('adv-content').classList.remove('modal-content-active'); };
+        window.toggleDropdown = () => document.getElementById('dropdown').classList.toggle('active');
+        window.redirectToHome = () => window.location.href = 'index.html';
+
+        window.addEventListener('click', function(e) {
+            const userProfileMenu = document.getElementById('user-profile-menu');
+            const dropdown = document.getElementById('dropdown');
+            if (userProfileMenu && dropdown && !userProfileMenu.contains(e.target) && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('intro-loader');
+                const mainContent = document.getElementById('main-content');
+                if (loader) { loader.classList.add('fade-out'); setTimeout(() => loader.style.display = 'none', 800); }
+                if (mainContent) { mainContent.classList.remove('hidden'); setTimeout(() => revealElements(), 100); }
+            }, 2500);
+        });
+
+        window.addEventListener('scroll', revealElements);
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
+            });
+        }
+    </script>
+</body>
+</html>
